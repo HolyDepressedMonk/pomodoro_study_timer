@@ -1,0 +1,40 @@
+body {
+    width: 260px;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.controls button {
+    margin: 4px;
+    padding: 8px 14px;
+}
+
+.settings {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+input {
+    padding: 6px;
+    text-align: center;
+}
+
+#saveBtn {
+    margin-top: 8px;
+    padding: 8px;
+}
+
+#status {
+    margin-top: 10px;
+    min-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}

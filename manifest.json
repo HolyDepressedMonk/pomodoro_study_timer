@@ -1,0 +1,21 @@
+{
+    "manifest_version" : 2,
+    "name": "Pomodoro Timer",
+    "version": "1.0",
+    "description": "Pomodoro Timer for study/productivity.",
+      "icons": {
+    "48": "icons/alarm.svg",
+    "96": "icons/bell.svg"
+    },
+    "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Pomodoro Timer"
+    },
+    "permissions": [
+    "storage",
+    "notifications"
+    ],
+    "background": {
+    "scripts": ["background.js"]
+    }
+}
