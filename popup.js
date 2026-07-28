@@ -9,16 +9,19 @@ const breakInput = document.getElementById("breakTime");
 
 const saveBtn = document.getElementById("saveBtn");
 
-const status = document.getElementById("status");
+const settingsStatus = document.getElementById("settingsStatus");
+
+const mode = document.getElementById("mode");
+const timerStatus = document.getElementById("timerStatus");
 
 function showStatus(message, isError = false) {
 
-    status.textContent = message;
+    settingsStatus.textContent = message;
 
-    status.style.color = isError ? "red" : "green";
+    settingsStatus.style.color = isError ? "red" : "green";
 
     setTimeout(() => {
-        status.textContent = "";
+        settingsStatus.textContent = "";
     }, 2000);
 
 }
@@ -34,17 +37,31 @@ async function loadSettings() {
     breakInput.value = data.breakTime ?? 5;
 }
 
-// startBtn.addEventListener("click", () => {
-//     alert("Start clicked!");
-// });
+startBtn.addEventListener("click", () => {
 
-// pauseBtn.addEventListener("click", () => {
-//     alert("Pause clicked!");
-// });
+    browser.runtime.sendMessage({
+        action: "start"
+    });
 
-// resetBtn.addEventListener("click", () => {
-//     alert("Reset clicked!");
-// });
+});
+
+pauseBtn.addEventListener("click", () => {
+
+    browser.runtime.sendMessage({
+        action: "pause"
+    });
+
+});
+
+resetBtn.addEventListener("click", () => {
+
+    browser.runtime.sendMessage({
+        action: "reset"
+    });
+
+    updateTimerDisplay();
+
+});
 
 saveBtn.addEventListener("click", async () => {
 
@@ -84,3 +101,57 @@ function validateTime(value) {
 }
 
 loadSettings();
+
+function formatTime(seconds) {
+
+    const minutes = Math.floor(seconds / 60);
+
+    const remainingSeconds = seconds % 60;
+
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+
+}
+
+async function updateTimerDisplay() {
+
+    const state = await browser.runtime.sendMessage({
+        action: "getState"
+    });
+
+    timer.textContent = formatTime(state.timeLeft);
+
+    mode.textContent =
+        state.mode === "study" ? "Study" : "Break";
+
+    switch (state.status) {
+
+        case "running":
+
+            timerStatus.textContent =
+                state.mode === "study"
+                    ? "🍅 Studying..."
+                    : "☕ Break Time";
+
+            break;
+
+        case "paused":
+
+            timerStatus.textContent = "⏸ Paused";
+
+            break;
+
+        case "ready":
+
+            timerStatus.textContent =
+                state.mode === "study"
+                    ? "▶ Ready to Study"
+                    : "▶ Ready for Break";
+
+            break;
+
+    }
+
+}
+
+updateTimerDisplay();
+setInterval(updateTimerDisplay, 1000);
