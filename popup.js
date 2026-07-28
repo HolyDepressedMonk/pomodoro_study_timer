@@ -53,9 +53,9 @@ pauseBtn.addEventListener("click", () => {
 
 });
 
-resetBtn.addEventListener("click", () => {
+resetBtn.addEventListener("click", async () => {
 
-    browser.runtime.sendMessage({
+    await browser.runtime.sendMessage({
         action: "reset"
     });
 
@@ -112,6 +112,35 @@ function formatTime(seconds) {
 
 }
 
+function updateButtonStates(state) {
+
+    switch (state.status) {
+
+        case "ready":
+
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = false;
+            break;
+
+        case "running":
+
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            resetBtn.disabled = false;
+            break;
+
+        case "paused":
+
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = false;
+            break;
+
+    }
+
+}
+
 async function updateTimerDisplay() {
 
     const state = await browser.runtime.sendMessage({
@@ -150,6 +179,8 @@ async function updateTimerDisplay() {
             break;
 
     }
+
+    updateButtonStates(state);
 
 }
 

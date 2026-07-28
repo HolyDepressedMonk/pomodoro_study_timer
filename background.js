@@ -124,6 +124,20 @@ function showNotification(title, message) {
 
 }
 
+const alarmSound = new Audio(
+    browser.runtime.getURL("assets/sounds/the_alarm.ogg")
+);
+
+function playSound() {
+
+    alarmSound.currentTime = 0;
+
+    alarmSound.play().catch(error => {
+        console.error("Failed to play sound:", error);
+    });
+
+}
+
 async function finishSession() {
 
     clearInterval(timerId);
@@ -149,9 +163,9 @@ async function finishSession() {
 
     }
 
-    await switchSession();
+    playSound();
 
-    // startTimer();
+    await switchSession();
 
 }
 
